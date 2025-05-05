@@ -1,10 +1,9 @@
 <script setup>
-//引入views/layout/index.vue命名为Layout
-import Layout from "@/views/layout/index.vue";
+
 </script>
 
 <template>
-  <!-- <Layout></Layout> -->
+  <h1>hello</h1>
   <router-view></router-view>
 </template>
 
