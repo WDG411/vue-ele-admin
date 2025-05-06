@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { queryAllApi, addDeptApi,queryInfoApi,updateDeptApi } from "@/api/dept";
-import { ElMessage } from 'element-plus';
+import { queryAllApi, addDeptApi,queryInfoApi,updateDeptApi,deleteDeptApi} from "@/api/dept";
+import { ElMessage,ElMessageBox} from 'element-plus';
 
 //声名列表展示数据
 const deptList = ref([])
@@ -49,6 +49,37 @@ const addDept = () => {
     deptFormRef.value.resetFields();
   }
   
+}
+
+//删除
+const delById = async (id) => {
+  ElMessageBox.confirm(
+    '删除部门后将不可撤销',
+    '提示',
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'error',
+      draggable: 'true',
+      roundButton:'false',
+    }
+  )
+    .then(async () => {
+      const result = await deleteDeptApi(id);
+      if (result.code) {
+        ElMessage.success('删除成功');
+        search();
+      } else {
+        ElMessage.error(result.msg);
+      }
+      
+    })
+    // .catch(() => {
+    //   ElMessage({
+    //     type: 'info',
+    //     message: 'Delete canceled',
+    //   })
+    // })
 }
 
 // 提交表单
@@ -110,7 +141,7 @@ const rules = ref({
 
         <template #default="scope">
           <el-button type="primary" size="small" @click="edit(scope.row.id)"><el-icon><Edit /></el-icon>编辑</el-button>
-          <el-button type="danger" size="small"><el-icon><Delete /></el-icon>删除</el-button>
+          <el-button type="danger" size="small" @click="delById(scope.row.id)"><el-icon><Delete /></el-icon>删除</el-button>
         </template>
 
       </el-table-column>
