@@ -125,24 +125,6 @@ const rules = ref({
   ]
 })
 
-// 提交逻辑封装在函数里
-// const submitForm = () => {
-//   if (!deptFormRef.value) return;
-//   deptFormRef.value.validate((valid, fields) => {
-//     if (valid) {
-//       save();   // 走你已有的保存逻辑
-//     } else {
-//       // 找到第一个校验失败字段并聚焦
-//       const firstInvalid = Object.keys(fields)[0];
-//       nextTick(() => {
-//         const el = document.querySelector(`[prop="${firstInvalid}"] input`);
-//         el && el.focus();
-//       });
-//       ElMessage.error('请正确填写表单！');
-//     }
-//   });
-// };
-
 
 const submitForm = () => {
   if (!deptFormRef.value) return
