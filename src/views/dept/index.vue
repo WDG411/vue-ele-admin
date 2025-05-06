@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted,nextTick } from 'vue'
 import { queryAllApi, addDeptApi,queryInfoApi,updateDeptApi,deleteDeptApi} from "@/api/dept";
 import { ElMessage,ElMessageBox} from 'element-plus';
 
@@ -21,7 +21,7 @@ const search = async () => {
 //对话框的状态
 const dialogFormVisible = ref(false);
 
-const dept = ref({ name: '' });
+const dept = ref({ name: '', obj: '' });
 
 const formTitle = ref('');
 
@@ -118,8 +118,55 @@ const rules = ref({
   name: [
     { required: true, message: '请输入部门名称', trigger: 'blur' },
     { min: 2, max: 10, message: '长度在2-10个字符', trigger: 'blur' },
+  ],
+  obj: [
+    { required: true, message: '请输入部门名称', trigger: 'blur' },
+    { min: 2, max: 10, message: '长度在2-10个字符', trigger: 'blur' },
   ]
 })
+
+// 提交逻辑封装在函数里
+// const submitForm = () => {
+//   if (!deptFormRef.value) return;
+//   deptFormRef.value.validate((valid, fields) => {
+//     if (valid) {
+//       save();   // 走你已有的保存逻辑
+//     } else {
+//       // 找到第一个校验失败字段并聚焦
+//       const firstInvalid = Object.keys(fields)[0];
+//       nextTick(() => {
+//         const el = document.querySelector(`[prop="${firstInvalid}"] input`);
+//         el && el.focus();
+//       });
+//       ElMessage.error('请正确填写表单！');
+//     }
+//   });
+// };
+
+
+const submitForm = () => {
+  if (!deptFormRef.value) return
+
+  deptFormRef.value.validate((valid) => {
+    if (valid) {
+      save()
+    } else {
+      nextTick(() => {
+        // 拿到 el-form 的根节点
+        const formEl = deptFormRef.value.$el
+        // 找到第一个带 .is-error 的表单项
+        const errItem = formEl.querySelector('.el-form-item.is-error')
+        if (errItem) {
+          // 在其内部找 input 或 textarea
+          const focusEl = errItem.querySelector('input,textarea')
+          focusEl && focusEl.focus()
+        }
+      })
+      ElMessage.error('请正确填写表单！')
+    }
+  })
+}
+
 
 </script>
 
@@ -140,8 +187,8 @@ const rules = ref({
       <el-table-column label="操作"align="center">
 
         <template #default="scope">
-          <el-button type="primary" size="small" @click="edit(scope.row.id)"><el-icon><Edit /></el-icon>编辑</el-button>
-          <el-button type="danger" size="small" @click="delById(scope.row.id)"><el-icon><Delete /></el-icon>删除</el-button>
+          <el-button type="primary" size="small" @click="edit(scope.row.id)" round><el-icon><Edit /></el-icon>编辑</el-button>
+          <el-button type="danger" size="small" @click="delById(scope.row.id)" round><el-icon><Delete /></el-icon>删除</el-button>
         </template>
 
       </el-table-column>
@@ -152,7 +199,10 @@ const rules = ref({
   <el-dialog v-model="dialogFormVisible" :title=formTitle width="500">
     <el-form :model="dept" ref="deptFormRef" :rules="rules">
       <el-form-item label="部门名称" prop="name" :label-width="formLabelWidth">
-        <el-input v-model="dept.name" autocomplete="off" />
+        <el-input v-model="dept.name" autocomplete="off"  @keydown.enter.native.prevent="submitForm"/>
+      </el-form-item>
+      <el-form-item label="部门obj" prop="obj" :label-width="formLabelWidth">
+        <el-input v-model="dept.obj" autocomplete="off"  @keydown.enter.native.prevent="submitForm"/>
       </el-form-item>
     </el-form>
     <template #footer>
