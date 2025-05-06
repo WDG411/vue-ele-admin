@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { queryAllApi, addDeptApi,queryInfoApi } from "@/api/dept";
+import { queryAllApi, addDeptApi,queryInfoApi,updateDeptApi } from "@/api/dept";
 import { ElMessage } from 'element-plus';
 
 //声名列表展示数据
@@ -55,17 +55,25 @@ const addDept = () => {
 const save = async () => {
 
   if (!deptFormRef.value) return;
+  let result;
   deptFormRef.value.validate( async (valid) => {
     if (valid) {
-      const result = await addDeptApi(dept.value);
-      if (result.code) {
-        ElMessage.success('操作成功');
-      
-        dialogFormVisible.value = false;
-      
-        search();
+
+      if (dept.value.id) {
+        result = await updateDeptApi(dept.value);
+      } else {
+        result = await addDeptApi(dept.value);
       }
     }
+
+    if (result.code) {
+      ElMessage.success('操作成功');
+      
+      dialogFormVisible.value = false;
+    
+      search();
+    }
+    
     else {
       ElMessage.error('表单校验不通过');
     }
