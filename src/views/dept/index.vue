@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { queryAllApi, addDeptApi } from "@/api/dept";
+import { queryAllApi, addDeptApi,queryInfoApi } from "@/api/dept";
 import { ElMessage } from 'element-plus';
 
 //声名列表展示数据
@@ -18,12 +18,27 @@ const search = async () => {
   }
 }
 
-//新增部门对话框的状态
+//对话框的状态
 const dialogFormVisible = ref(false);
 
 const dept = ref({ name: '' });
 
 const formTitle = ref('');
+
+//查询回显
+const edit = async (id) => {
+  formTitle.value = '编辑部门';
+  const result = await queryInfoApi(id);
+
+  if (deptFormRef.value) {
+    deptFormRef.value.resetFields();
+  }
+  
+  if (result.code) {
+    dialogFormVisible.value = true;
+    dept.value = result.data;
+  }
+}
 
 //新增部门
 const addDept = () => {
@@ -86,7 +101,7 @@ const rules = ref({
       <el-table-column label="操作"align="center">
 
         <template #default="scope">
-          <el-button type="primary" size="small"><el-icon><Edit /></el-icon>编辑</el-button>
+          <el-button type="primary" size="small" @click="edit(scope.row.id)"><el-icon><Edit /></el-icon>编辑</el-button>
           <el-button type="danger" size="small"><el-icon><Delete /></el-icon>删除</el-button>
         </template>
 
@@ -94,7 +109,7 @@ const rules = ref({
     </el-table>
   </div>
 
-  <!-- 新增部门的对话框 -->
+  <!-- 对话框 -->
   <el-dialog v-model="dialogFormVisible" :title=formTitle width="500">
     <el-form :model="dept" ref="deptFormRef" :rules="rules">
       <el-form-item label="部门名称" prop="name" :label-width="formLabelWidth">
