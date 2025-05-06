@@ -3,12 +3,14 @@ import { ref, onMounted } from 'vue'
 import { queryAllApi, addDeptApi } from "@/api/dept";
 import { ElMessage } from 'element-plus';
 
+//声名列表展示数据
 const deptList = ref([])
 
 onMounted(() => {
   search()
 })
 
+//查询部门
 const search = async () => {
   const result = await queryAllApi();
   if (result.code) {
@@ -16,29 +18,54 @@ const search = async () => {
   }
 }
 
+//新增部门对话框的状态
 const dialogFormVisible = ref(false);
 
 const dept = ref({ name: '' });
 
 const formTitle = ref('');
+
+//新增部门
 const addDept = () => {
   formTitle.value = '新增部门';
   dialogFormVisible.value = true;
   dept.value = { name: '' };
-}
-
-const save = async () => {
-  const result = await addDeptApi(dept.value);
-  if (result.code) {
-    ElMessage.success('操作成功');
-
-    dialogFormVisible.value = false;
-
-    search();
-  } else {
-    ElMessage.error(result.msg());
+  if (deptFormRef.value) {
+    deptFormRef.value.resetFields();
   }
+  
 }
+
+// 提交表单
+const save = async () => {
+
+  if (!deptFormRef.value) return;
+  deptFormRef.value.validate( async (valid) => {
+    if (valid) {
+      const result = await addDeptApi(dept.value);
+      if (result.code) {
+        ElMessage.success('操作成功');
+      
+        dialogFormVisible.value = false;
+      
+        search();
+      }
+    }
+    else {
+      ElMessage.error('表单校验不通过');
+    }
+  })
+
+}
+
+const deptFormRef = ref();
+
+const rules = ref({
+  name: [
+    { required: true, message: '请输入部门名称', trigger: 'blur' },
+    { min: 2, max: 10, message: '长度在2-10个字符', trigger: 'blur' },
+  ]
+})
 
 </script>
 
@@ -69,8 +96,8 @@ const save = async () => {
 
   <!-- 新增部门的对话框 -->
   <el-dialog v-model="dialogFormVisible" :title=formTitle width="500">
-    <el-form :model="dept">
-      <el-form-item label="部门名称" :label-width="formLabelWidth">
+    <el-form :model="dept" ref="deptFormRef" :rules="rules">
+      <el-form-item label="部门名称" prop="name" :label-width="formLabelWidth">
         <el-input v-model="dept.name" autocomplete="off" />
       </el-form-item>
     </el-form>
