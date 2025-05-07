@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+      "target": "ESNext",
+      "module": "ESNext",
+      "moduleResolution": "node",
+      "experimentalDecorators": true,
+      "baseUrl": ".",
+      "paths": {
+        "@/*": ["src/*"]
+      }
+    },
+    "include": [
+      "src/**/*.js",
+      "src/**/*.vue",
+      "src/**/*.json"
+    ],
+    "exclude": ["node_modules"]
+  }
+  
