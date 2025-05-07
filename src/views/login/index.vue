@@ -1,7 +1,28 @@
 <script setup>
   import { ref } from 'vue'
-  
-  let loginForm = ref({username:'', password:''})
+  import { loginApi } from '@/api/login';
+  import { useRouter} from "vue-router";
+  import { ElMessage } from "element-plus";
+
+  const router = useRouter();
+  let loginForm = ref({username:'', password:''});
+  //登录
+  const login = async () => {
+    const result = await loginApi(loginForm.value);
+
+    if(result.code){
+      ElMessage.success('登录成功');
+      localStorage.setItem('loginUser',JSON.stringify(result.data));
+      router.push('/');
+    }else{
+      ElMessage.error(result.msg);
+    }
+  }
+
+  //重置
+  const clear = () => {
+
+  }
   
 </script>
 
@@ -9,7 +30,7 @@
   <div id="container">
     <div class="login-form">
       <el-form label-width="80px">
-        <p class="title">Tlias智能学习辅助系统</p>
+        <p class="title">WDG智能学习辅助系统</p>
         <el-form-item label="用户名" prop="username">
           <el-input v-model="loginForm.username" placeholder="请输入用户名"></el-input>
         </el-form-item>
@@ -19,8 +40,8 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button class="button" type="primary" @click="">登 录</el-button>
-          <el-button class="button" type="info" @click="">重 置</el-button>
+          <el-button class="button" type="primary" @click="login">登 录</el-button>
+          <el-button class="button" type="info" @click="clear">重 置</el-button>
         </el-form-item>
       </el-form>
     </div>
