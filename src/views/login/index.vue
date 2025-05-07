@@ -1,10 +1,11 @@
 <script setup>
   import { ref } from 'vue'
   import { loginApi } from '@/api/login';
-  import { useRouter} from "vue-router";
+  //import { useRouter} from "vue-router";
+  import router from "@/router";
   import { ElMessage } from "element-plus";
 
-  const router = useRouter();
+  //const router = useRouter();
   let loginForm = ref({username:'', password:''});
   //登录
   const login = async () => {
@@ -21,7 +22,7 @@
 
   //重置
   const clear = () => {
-
+    loginForm.value = {username:'', password:''};
   }
   
 </script>

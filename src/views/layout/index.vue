@@ -1,5 +1,34 @@
 <script setup>
+import { ElMessage, ElMessageBox } from 'element-plus';
+import { ref,onMounted} from "vue";
+import router from "@/router";
 
+onMounted(() => {
+  const loginUser = JSON.parse(localStorage.getItem('loginUser'));
+
+  if(loginUser && loginUser.name){
+    loginName.value = loginUser.name;
+  }
+})
+
+const loginName = ref('');
+//退出登录
+const logout = () => {
+  ElMessageBox.confirm(
+    '你确定退出登录吗?',
+    '提示',
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(() => {
+      ElMessage.success('退出登录成功');
+      localStorage.removeItem('loginUser');
+      router.push('/login');
+    })
+};
 </script>
 
 <template>
@@ -12,8 +41,8 @@
           <a href="">
             <el-icon><EditPen /></el-icon> 修改密码 &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;
           </a>
-          <a href="">
-            <el-icon><SwitchButton /></el-icon> 退出登录
+          <a href="javascript:;" @click="logout">
+            <el-icon><SwitchButton /></el-icon> 退出登录【{{loginName}}】
           </a>
         </span>
       </el-header>
@@ -26,7 +55,7 @@
             <el-menu-item index="/index">
               <el-icon><Promotion /></el-icon> 首页
             </el-menu-item>
-            
+
             <!-- 班级管理菜单 -->
             <el-sub-menu index="/manage">
               <template #title>
@@ -39,7 +68,7 @@
                 <el-icon><UserFilled /></el-icon>学员管理
               </el-menu-item>
             </el-sub-menu>
-            
+
             <!-- 系统信息管理 -->
             <el-sub-menu index="/system">
               <template #title>
@@ -52,7 +81,7 @@
                 <el-icon><Avatar /></el-icon>员工管理
               </el-menu-item>
             </el-sub-menu>
-            
+
             <!-- 数据统计管理 -->
             <el-sub-menu index="/report">
               <template #title>
