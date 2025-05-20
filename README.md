@@ -1,35 +1,37 @@
-# vue-tlias-management
+# vue-ele-admin
 
-This template should help get you started developing with Vue 3 in Vite.
+vue-ele-admin 是一个基于 Vue 3 和 Element Plus 的前端管理系统模板，旨在提供后台管理系统的常用功能。它使用了现代前端技术栈（如 Vue3 + Vue Router、Element Plus、Vite 等），并集成了 Axios 进行接口调用。以下内容介绍了项目的主要技术栈、功能模块和目录结构，帮助开发者快速了解该模板的用途和架构。
 
-## Recommended IDE Setup
+## 技术栈
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+* **Vue 3 + Vue Router**：采用 Vue 3 作为核心框架，使用 Vue Router 管理前端路由。
+* **Element Plus**：使用 Element Plus 组件库构建 UI 界面。
+* **Vite**：使用 Vite 作为开发和构建工具，提供快速热重载和高效打包体验。
+* **Pinia**：使用 Pinia 进行全局状态管理，简化状态共享和管理。
+* **Axios**：用于封装 HTTP 请求，与后台 API 进行数据交互。
 
-## Customize configuration
+## 主要功能模块
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+* **动态菜单系统**：根据用户角色和路由配置动态生成侧边栏导航菜单，通过动态路由实现菜单项的增删改和展示。
+* **用户登录**：提供登录页面，通过调用认证接口完成用户登录，登录成功后在全局状态（Pinia）或本地存储中保存用户信息和身份令牌。
+* **页面缓存**：对关键页面组件使用 `keep-alive` 缓存机制，保留组件状态，提高页面切换时的渲染效率。
+* **多标签页**：实现浏览器式的多标签页功能，允许在不同标签间同时打开多个页面，并且保持各标签之间的独立状态。
+* **接口封装**：统一封装 Axios 请求逻辑（如 baseURL、请求/响应拦截、错误处理等），简化业务层接口调用，并提高可维护性。
+* **路由系统**：基于 Vue Router 配置静态路由和动态路由，通过路由元信息（meta）控制菜单显示和权限验证，并结合路由守卫实现导航拦截。
 
-## Project Setup
+## 目录结构
 
-```sh
-npm install
-```
+项目主要目录如下所示：
 
-### Compile and Hot-Reload for Development
+* `public/`：静态资源目录（存放 `index.html`、图标、静态文件等）。
+* `src/`：源码主目录，包含主要的业务代码：
 
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+  * `api/`：封装的接口请求函数文件。
+  * `assets/`：静态资源（图片、样式等）。
+  * `components/`：全局通用组件。
+  * `layout/`：布局组件（如顶部导航、侧边栏、标签页等页面框架）。
+  * `router/`：路由配置文件，定义应用的静态路由和动态路由规则。
+  * `store/`：Pinia 状态管理目录，存放全局状态管理相关文件。
+  * `utils/`：工具函数或公共逻辑库。
+  * `views/`：各功能页面视图组件。
+* 根目录下还包含项目配置文件，如 `package.json`、`vite.config.js`、`.eslintrc.cjs` 等，用于项目构建和配置。
